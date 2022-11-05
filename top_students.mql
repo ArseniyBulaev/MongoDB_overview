@@ -1,0 +1,9 @@
+db.students.aggregate(
+     [ 
+        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}},
+        {$unwind: "$grades"},
+        {$group: { _id: "$name", average_score: {$avg: "$grades.grade"}}},
+        {$sort: { average_score: -1}},
+        {$limit: 10}
+    ]
+)

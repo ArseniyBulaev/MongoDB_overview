@@ -1,0 +1,10 @@
+db.students.aggregate(
+    [
+        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}},
+        {$unwind: "$grades"},
+        {$match: {"grades.grade": {$gte: 3}}},
+        {$group: {_id:"$name", certifiedSubjectsCount: {$count: {}}}},
+        {$match: {"certifiedSubjectsCount": {$gte: 7}}},
+        {$project: {name: 1}}
+    ]
+)

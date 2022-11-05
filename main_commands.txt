@@ -1,0 +1,6 @@
+db.users.remove({}) 								- Удалить все записи из коллекции
+mongoimport --jsonArray --db test --collection docs --file example2.json	- Вставка записей в коллекцию
+docker cp foo.txt container_id:/foo.txt						- Перемещение файлов в контейней
+docker exec -it mongo mongosh							- Открытие консоли
+db.users.find()									- Показать все записи
+docker start container_name							- Запустить существующий контейнер
