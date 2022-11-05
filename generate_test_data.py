@@ -2,19 +2,24 @@ from faker import Faker
 import random
 import json
 
+
+
 def main():
 
-    courses_count = 12
-    students_count = 300
+    courses_count = 12      # Колличество курсов
+    students_count = 300    # Колличество студентов 
 
+    # Генерируем курсы
     course_records = generate_courses(courses_count)
+    # Генерируем студентов
     student_records = generate_students(students_count, courses_count)
 
+    # Сохраяняем результаты 
     write_to_file("courses.json",course_records)
     write_to_file("students.json", student_records)
 
 
-
+# Тупая функия записи данных в файл
 def write_to_file(file_name,data):
     f = open(file_name, "w")
     f.write(data)
@@ -53,7 +58,7 @@ def generate_courses(courses_count):
 def generate_students(students_count, courses_count):
 
     students = []
-    groups_count = 3
+    groups_count = 3 # Пусть будет 3 группы студентов
     fake = Faker()
 
     # Случайное имя группы 
