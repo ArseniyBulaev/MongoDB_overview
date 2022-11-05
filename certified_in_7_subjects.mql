@@ -1,10 +1,10 @@
 db.students.aggregate(
     [
-        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}},
-        {$unwind: "$grades"},
-        {$match: {"grades.grade": {$gte: 3}}},
-        {$group: {_id:"$name", certifiedSubjectsCount: {$count: {}}}},
-        {$match: {"certifiedSubjectsCount": {$gte: 7}}},
-        {$project: {name: 1}}
+        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}}, // Фильтруем имя студента и его оценки
+        {$unwind: "$grades"}, // Раскрываем массив с оценками
+        {$match: {"grades.grade": {$gte: 3}}}, // Фильтруем записи с положительной оценкой
+        {$group: {_id:"$name", certifiedSubjectsCount: {$count: {}}}}, // Группируем и подсчитываем колличество положительных оценок
+        {$match: {"certifiedSubjectsCount": {$gte: 7}}}, // Выбираем только те группы, в которых положительных оценок больше или равно 7
+        {$project: {name: 1}} // Фильтруем имена сдавших студентов
     ]
 )

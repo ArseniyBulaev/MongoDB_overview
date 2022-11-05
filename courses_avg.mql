@@ -1,6 +1,9 @@
- db.students.aggregate([
-  { $unwind: "$grades" },
-  { $lookup: { from: "courses", localField: "grades.course_id", foreignField: "_id", as: "courses_info" } },
-  { $project: { _id: 0 , course_name: "$courses_info.name", course_grade: "$grades.grade" }},
-  { $unwind: "$course_name" },
-  { $group: { _id: "$course_name", average_score:{$avg: "$course_grade"}}}])
+ db.students.aggregate(
+    [
+        { $unwind: "$grades" }, // Раскрываем массив 
+        { $lookup: { from: "courses", localField: "grades.course_id", foreignField: "_id", as: "courses_info" } }, // Объединяем результат с коллекцией курсов
+        { $project: { _id: 0 , course_name: "$courses_info.name", course_grade: "$grades.grade" }}, // Фильтруем поля "имя курса" и "оценка"
+        { $unwind: "$course_name" }, // Разворачиваем поле с именем, так как предыдущая операция поместила его в массив  
+        { $group: { _id: "$course_name", average_score:{$avg: "$course_grade"}}} // Группируем по имени курса и считаем среднюю оценку
+    ]
+)

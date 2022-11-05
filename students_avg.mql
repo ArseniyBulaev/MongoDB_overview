@@ -1,7 +1,7 @@
 db.students.aggregate(
      [ 
-        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}},
-        {$unwind: "$grades"},
-        {$group: { _id: "$name", average_score: {$avg: "$grades.grade"}}}
+        {$project: { _id:0, grades:1, name: {first_name: "$first_name", last_name: "$last_name"}}}, // Фильтруем имя студента и его оценки
+        {$unwind: "$grades"}, // Раскрываем массив с оценками
+        {$group: { _id: "$name", average_score: {$avg: "$grades.grade"}}} // Группируем по именам и считаем среднее по оценкам
      ]
 )

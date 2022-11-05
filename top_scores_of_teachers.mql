@@ -1,12 +1,19 @@
 db.students.aggregate(
      [
-         {$unwind:"$grades"},
-         {$project: {course_id:"$grades.course_id"}},
-         {$group:{_id: "$course_id", scores_count: {$count:{}}}},
-         {$lookup: { from: "courses", localField: "_id", foreignField: "_id", as: "courses_info" }},
-         {$sort: {scores_count: -1}},
+         {$unwind:"$grades"}, // Разворачиваем массив с оценками
+         {$project: {course_id:"$grades.course_id"}}, // Вытаскиваем ID курсов
+         {$group:{_id: "$course_id", scores_count: {$count:{}}}}, // Группируем по ID и считаем колличество курсов с данным ID.
+                                                                  // Это действие эквивалентно подсчёту высталенных оценок,
+                                                                  // так как для каждого курса высталена оценка (для сгенерированных данных),
+                                                                  // и, следовательно, колличество курсов с данным ID
+                                                                  // равно количеству высталенных оценок по данному предмету.
+                                                                  // (Надеюсь понятно написал) 
+         {$lookup: { from: "courses", localField: "_id", foreignField: "_id", as: "courses_info" }}, // Объединяем результат с коллекцией курсов
+         {$sort: {scores_count: -1}}, // Сортируем В порядке убывания просталенных оценок
          {$project: {_id: 0,
                      scores_count:1,
                      lecturer:{
                         lecturer_first_name: "$courses_info.lecturer_first_name",
-                        lecturer_last_name: "$courses_info.lecturer_last_name" }}}])
+                        lecturer_last_name: "$courses_info.lecturer_last_name" }}} // Красиво выводим имя лектора и колличество оценок
+    ]
+)
